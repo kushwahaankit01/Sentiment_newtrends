@@ -102,7 +102,7 @@ except Exception:
     from tensorflow.keras.preprocessing.sequence import pad_sequences
     register_keras = tf.keras.utils.register_keras_serializable
 
-# ── Patch InputLayer.from_config for Keras 3 -> Keras 2 compatibility ────────
+# ── Patch InputLayer.from_config & get_policy for Keras 3 -> Keras 2 ─────────
 try:
     _orig_input_from_config = _OriginalInputLayer.from_config
     @classmethod
@@ -114,6 +114,20 @@ try:
     _OriginalInputLayer.from_config = _patched_input_from_config
 except Exception as e:
     pass
+
+try:
+    import tf_keras.src.mixed_precision.policy as _policy_mod
+    _orig_get_policy = _policy_mod.get_policy
+    def _patched_get_policy(identifier):
+        if isinstance(identifier, dict):
+            identifier = identifier.get("config", {}).get("name", "float32")
+        if isinstance(identifier, str):
+            return _policy_mod.Policy(identifier)
+        return _orig_get_policy(identifier)
+    _policy_mod.get_policy = _patched_get_policy
+except Exception as e:
+    pass
+
 
 
 @register_keras()
