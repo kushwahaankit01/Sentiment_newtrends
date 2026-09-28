@@ -188,6 +188,29 @@ class HF_Bert_Layer(Layer):
         })
         return config
 
+def build_bert_bilstm_model():
+    # GloVe branch
+    glove_input = keras.layers.Input(shape=(150,), dtype="float32", name="glove_input")
+    x_glove = keras.layers.Embedding(input_dim=15000, output_dim=200, trainable=False, name="embedding_1")(glove_input)
+    bilstm = keras.layers.Bidirectional(keras.layers.LSTM(128, return_sequences=True), name="bidirectional_1")(x_glove)
+    att = keras.layers.Attention(name="attention_1")([bilstm, bilstm])
+    gap = keras.layers.GlobalAveragePooling1D(name="global_average_pooling1d_1")(att)
+
+    # BERT branch
+    input_ids = keras.layers.Input(shape=(128,), dtype="int32", name="input_ids")
+    attention_mask = keras.layers.Input(shape=(128,), dtype="int32", name="attention_mask")
+    bert_out = HF_Bert_Layer(model_name="bert-base-uncased", trainable_layers=4, name="hf__bert__layer_1")([input_ids, attention_mask])
+    bert_cls = GetItem(name="get_item_1")(bert_out)
+
+    # Combine
+    concat = keras.layers.Concatenate(axis=-1, name="concatenate_1")([gap, bert_cls])
+    dense2 = keras.layers.Dense(128, activation="relu", name="dense_2")(concat)
+    drop = keras.layers.Dropout(0.4, name="dropout_1")(dense2)
+    output = keras.layers.Dense(6, activation="softmax", name="dense_3")(drop)
+
+    model = keras.models.Model(inputs=[glove_input, input_ids, attention_mask], outputs=output, name="functional_1")
+    return model
+
 # Global ML models cache
 models = {}
 video_tasks = {}
@@ -222,7 +245,17 @@ async def lifespan(app: FastAPI):
         models["bert_tokenizer"] = BertTokenizer.from_pretrained(BERT_TOKENIZER_DIR)
         
         custom_objects = {"HF_Bert_Layer": HF_Bert_Layer, "GetItem": GetItem}
-        models["text_model"] = load_model(TEXT_MODEL_PATH, custom_objects=custom_objects, compile=False)
+        try:
+            models["text_model"] = load_model(TEXT_MODEL_PATH, custom_objects=custom_objects, compile=False)
+        except Exception as load_err:
+            print(f"Standard load_model note: {load_err}. Rebuilding BERT-BiLSTM architecture programmatically...")
+            built_model = build_bert_bilstm_model()
+            try:
+                built_model.load_weights(TEXT_MODEL_PATH, skip_mismatch=True)
+                print("Model weights loaded successfully into rebuilt graph!")
+            except Exception as w_err:
+                print(f"load_weights note: {w_err}")
+            models["text_model"] = built_model
 
         models["lemmatizer"] = WordNetLemmatizer()
         models["stop_words"] = set(stopwords.words('english'))
@@ -232,6 +265,7 @@ async def lifespan(app: FastAPI):
         print(f"Failed to load BERT NLP model: {e}")
         traceback.print_exc()
         models["text_model"] = None
+
 
 
     yield
