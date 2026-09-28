@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+env/
+.venv/
+.env
+*.env
+
+# HuggingFace cache
+.cache_hf/
+.hf_cache/
+backend/.cache_hf/
+
+# Node
+node_modules/
+frontend/sentiment_newstrends/node_modules/
+
+# Vite build output
+frontend/sentiment_newstrends/dist/
+
+# Model files (too large for git — use Git LFS or upload separately)
+# Comment these out if you are using Git LFS
+# model/best.pt
+# model/yolov8n.pt
+# model/model_bert_v3/bert_bilstm_hybrid_v3_ft.keras
+# model/model_bert_v3/tokenizer.pkl
+
+# Video test files
+backend/test_avc1.mp4
+backend/test_h264.mp4
+
+# Static generated files
+backend/static/processed_*.mp4
+backend/static/temp_*.mp4
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+*.log

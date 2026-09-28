@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+websockets
+python-multipart
+tensorflow
+tf-keras
+transformers
+ultralytics
+numpy
+pandas
+opencv-python-headless
+nltk
+static-ffmpeg
+pydantic
+scikit-learn
+torch

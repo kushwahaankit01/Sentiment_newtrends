@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #f1f5f9;
+  background-color: #03040b;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(127, 0, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.04) 0%, transparent 60%);
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Card System */
+.cyber-card {
+  background: rgba(8, 10, 24, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cyber-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 255, 255, 0.02);
+}
+
+/* Header & Logo styling */
+.logo-glow {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #7f00ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(0, 242, 254, 0.25));
+}
+
+.connection-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  padding: 8px 16px;
+  border-radius: 30px;
+  color: #10b981;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+}
+
+/* Welcome Hero Banner */
+.hero-container {
+  position: relative;
+  background: linear-gradient(135deg, rgba(8, 10, 24, 0.9) 0%, rgba(4, 5, 12, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 60px 40px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.hero-glow-1 {
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 300px;
+  height: 300px;
+  background: rgba(127, 0, 255, 0.12);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.hero-glow-2 {
+  position: absolute;
+  bottom: -50%;
+  right: -20%;
+  width: 350px;
+  height: 350px;
+  background: rgba(0, 242, 254, 0.12);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.badge-glow {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  background: rgba(127, 0, 255, 0.1);
+  color: #c084fc;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  box-shadow: 0 0 15px rgba(127, 0, 255, 0.15);
+}
+
+/* Navigation Dock Link Buttons */
+.cyber-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: rgba(8, 10, 24, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  border-radius: 16px;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.cyber-nav-link {
+  color: #94a3b8;
+  padding: 10px 22px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+.cyber-nav-link:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cyber-nav-link.active {
+  color: #ffffff;
+  background: rgba(127, 0, 255, 0.1);
+  border-color: rgba(192, 132, 252, 0.25);
+  box-shadow: 0 0 15px rgba(127, 0, 255, 0.15);
+}
+
+/* Portal Grid Card items */
+.portal-card {
+  display: block;
+  text-decoration: none;
+  background: rgba(8, 10, 24, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 22px;
+  padding: 35px 25px;
+  color: #cbd5e1;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-icon {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.portal-card:hover .portal-icon {
+  transform: scale(1.15) translateY(-3px);
+}
+
+.portal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  transition: color 0.3s ease;
+}
+
+.portal-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #64748b;
+  margin: 0 0 25px 0;
+}
+
+.portal-action {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3b82f6;
+  transition: color 0.3s ease, padding 0.3s ease;
+}
+
+/* Hover effects for each portal card */
+.portal-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+/* Text Portal - Violet Glow */
+.text-portal:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 25px 50px rgba(168, 85, 247, 0.15);
+}
+.text-portal:hover .portal-title { color: #a855f7; }
+.text-portal:hover .portal-action { color: #c084fc; padding-left: 5px; }
+
+/* Image Portal - Orange Glow */
+.image-portal:hover {
+  transform: translateY(-4px);
+  border-color: rgba(249, 115, 22, 0.3);
+  box-shadow: 0 25px 50px rgba(249, 115, 22, 0.15);
+}
+.image-portal:hover .portal-title { color: #f97316; }
+.image-portal:hover .portal-action { color: #ffedd5; padding-left: 5px; }
+
+/* Webcam Portal - Cyan Glow */
+.webcam-portal:hover {
+  transform: translateY(-4px);
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow: 0 25px 50px rgba(6, 182, 212, 0.15);
+}
+.webcam-portal:hover .portal-title { color: #06b6d4; }
+.webcam-portal:hover .portal-action { color: #cffafe; padding-left: 5px; }
+
+/* Video Portal - Pink Glow */
+.video-portal:hover {
+  transform: translateY(-4px);
+  border-color: rgba(236, 72, 153, 0.3);
+  box-shadow: 0 25px 50px rgba(236, 72, 153, 0.15);
+}
+.video-portal:hover .portal-title { color: #ec4899; }
+.video-portal:hover .portal-action { color: #fce7f3; padding-left: 5px; }
+
+/* Status items inside status block */
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-dot.green {
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Beautiful Inputs & Textareas */
+.cyber-input {
+  background: rgba(4, 5, 12, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  padding: 18px;
+  border-radius: 12px;
+  outline: none;
+  font-family: inherit;
+  font-size: 1.05rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.cyber-input:focus {
+  border-color: rgba(168, 85, 247, 0.4);
+  border-bottom-color: #a855f7;
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.05), inset 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Uploader Dropzones */
+.upload-dropzone {
+  border: 2px dashed rgba(255, 255, 255, 0.08);
+  background: rgba(4, 5, 12, 0.3);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.upload-dropzone:hover {
+  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(249, 115, 22, 0.02);
+}
+
+/* Primary Button Overhaul */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+  filter: brightness(1.05);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Progress bar overhaul */
+.progress-bar-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 30px;
+  overflow: hidden;
+  height: 10px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  transition: width 0.4s ease;
+}
+
+/* Animation utilities */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(0.95); }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #03040b;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
