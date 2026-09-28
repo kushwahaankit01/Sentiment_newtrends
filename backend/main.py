@@ -1,6 +1,8 @@
+import sys
 import os
 import re
 import torch
+
 
 # PyTorch 2.6 compatibility fix for YOLO model loading
 orig_load = torch.load
