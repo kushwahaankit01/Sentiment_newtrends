@@ -4,20 +4,28 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ── CRITICAL: Set ALL env vars BEFORE any TF/PyTorch imports ─────────────────
-# These prevent memory spikes that cause exit 139 (SIGSEGV) on limited hardware
-
 os.environ["HF_HOME"]                = "/tmp/.cache_hf"
 os.environ["TRANSFORMERS_CACHE"]     = "/tmp/.cache_hf"
+os.environ["TF_USE_LEGACY_KERAS"]    = "1"        # Enforce Keras 2 / tf_keras legacy behavior
 os.environ["OMP_NUM_THREADS"]        = "1"        # Limit OpenMP threads
 os.environ["MKL_NUM_THREADS"]        = "1"        # Limit MKL threads
 os.environ["TF_NUM_INTRAOP_THREADS"] = "1"        # Limit TF intra-op threads
 os.environ["TF_NUM_INTEROP_THREADS"] = "1"        # Limit TF inter-op threads
-os.environ["TF_ENABLE_ONEDNN_OPTS"]  = "0"        # Disable oneDNN (avoids AVX512 issues)
+os.environ["TF_ENABLE_ONEDNN_OPTS"]  = "0"        # Disable oneDNN
 os.environ["TF_CPP_MIN_LOG_LEVEL"]   = "3"        # Suppress TF noise
-os.environ["CUDA_VISIBLE_DEVICES"]   = ""         # Ensure CPU-only mode
 os.environ["PYTORCH_NO_CUDA_MEMORY_CACHING"] = "1"
 
 os.makedirs("/tmp/.cache_hf", exist_ok=True)
+
+# ── ZeroGPU support for HuggingFace Spaces ────────────────────────────────────
+try:
+    import spaces
+    @spaces.GPU
+    def zero_gpu_init():
+        return True
+    print("✅ ZeroGPU function registered successfully.", flush=True)
+except Exception as e:
+    print(f"ℹ️ Spaces info: {e}", flush=True)
 
 # ── Diagnostic: verify model files are real binaries, not LFS pointers ───────
 def check_file(label, path):
@@ -42,7 +50,6 @@ print("====================================\n", flush=True)
 try:
     import torch
     torch.set_num_threads(1)
-    torch.set_num_interop_threads(1)
     print(f"✅ PyTorch threads set to 1", flush=True)
 except Exception as e:
     print(f"⚠️  Could not set torch threads: {e}", flush=True)
@@ -55,3 +62,4 @@ from main import app
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=7860)
+

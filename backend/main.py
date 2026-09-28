@@ -56,13 +56,25 @@ STATIC_DIR = os.path.join(PROJECT_ROOT, "static")
 os.makedirs(STATIC_DIR, exist_ok=True)
 
 # Register Custom Keras Layer for loading
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 import tensorflow as tf
-from tensorflow.keras.layers import Layer
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-@tf.keras.utils.register_keras_serializable()
+try:
+    import tf_keras as keras
+    from tf_keras.layers import Layer
+    from tf_keras.models import load_model
+    from tf_keras.preprocessing.sequence import pad_sequences
+    register_keras = keras.utils.register_keras_serializable
+except Exception:
+    keras = tf.keras
+    from tensorflow.keras.layers import Layer
+    from tensorflow.keras.models import load_model
+    from tensorflow.keras.preprocessing.sequence import pad_sequences
+    register_keras = tf.keras.utils.register_keras_serializable
+
+@register_keras()
 class HF_Bert_Layer(Layer):
+
     def __init__(self, model_name="bert-base-uncased", trainable_layers=4, **kwargs):
         super().__init__(**kwargs)
         self.model_name = model_name
