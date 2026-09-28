@@ -2,24 +2,29 @@ import sys
 import os
 import types
 
-# ── Polyfill for Keras 2/3 / transformers compatibility ─────────────────────
-class KerasLegacyPolyfill(types.ModuleType):
-    def __getattr__(self, name):
-        try:
-            import tf_keras
-            return getattr(tf_keras, name)
-        except Exception:
-            return None
+# ── Polyfill for Keras 2/3 / transformers / pickle compatibility ────────────
+try:
+    import tf_keras as _tfk
+    import tf_keras.preprocessing.text as _text
+    import tf_keras.preprocessing.sequence as _seq
+    import tf_keras.models as _models
+    import tf_keras.layers as _layers
+except ImportError:
+    import tensorflow.keras as _tfk
+    import tensorflow.keras.preprocessing.text as _text
+    import tensorflow.keras.preprocessing.sequence as _seq
+    import tensorflow.keras.models as _models
+    import tensorflow.keras.layers as _layers
 
-for mod_name in [
-    "keras.src",
-    "keras.src.legacy",
-    "keras.src.legacy.saved_model",
-    "keras.src.legacy.preprocessing",
-    "keras.src.legacy.preprocessing.image",
-]:
-    if mod_name not in sys.modules:
-        sys.modules[mod_name] = KerasLegacyPolyfill(mod_name)
+sys.modules["keras"] = _tfk
+sys.modules["keras.src"] = _tfk
+sys.modules["keras.src.legacy"] = _tfk
+sys.modules["keras.src.legacy.preprocessing"] = _tfk.preprocessing
+sys.modules["keras.src.legacy.preprocessing.text"] = _text
+sys.modules["keras.src.legacy.preprocessing.sequence"] = _seq
+sys.modules["keras.src.legacy.models"] = _models
+sys.modules["keras.src.legacy.layers"] = _layers
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
