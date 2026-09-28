@@ -57,7 +57,9 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 
 # Register Custom Keras Layer for loading
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
+import sys
 import types
+
 class KerasLegacyPolyfill(types.ModuleType):
     def __getattr__(self, name):
         try:
