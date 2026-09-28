@@ -57,6 +57,25 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 
 # Register Custom Keras Layer for loading
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
+import types
+class KerasLegacyPolyfill(types.ModuleType):
+    def __getattr__(self, name):
+        try:
+            import tf_keras
+            return getattr(tf_keras, name)
+        except Exception:
+            return None
+
+for mod_name in [
+    "keras.src",
+    "keras.src.legacy",
+    "keras.src.legacy.saved_model",
+    "keras.src.legacy.preprocessing",
+    "keras.src.legacy.preprocessing.image",
+]:
+    if mod_name not in sys.modules:
+        sys.modules[mod_name] = KerasLegacyPolyfill(mod_name)
+
 import tensorflow as tf
 
 try:
@@ -74,6 +93,7 @@ except Exception:
 
 @register_keras()
 class HF_Bert_Layer(Layer):
+
 
     def __init__(self, model_name="bert-base-uncased", trainable_layers=4, **kwargs):
         super().__init__(**kwargs)
@@ -148,8 +168,11 @@ async def lifespan(app: FastAPI):
         models["stop_words"] = set(stopwords.words('english'))
         print("BERT Text Model loaded successfully!")
     except Exception as e:
+        import traceback
         print(f"Failed to load BERT NLP model: {e}")
+        traceback.print_exc()
         models["text_model"] = None
+
 
     yield
     models.clear()

@@ -1,5 +1,25 @@
 import sys
 import os
+import types
+
+# ── Polyfill for Keras 2/3 / transformers compatibility ─────────────────────
+class KerasLegacyPolyfill(types.ModuleType):
+    def __getattr__(self, name):
+        try:
+            import tf_keras
+            return getattr(tf_keras, name)
+        except Exception:
+            return None
+
+for mod_name in [
+    "keras.src",
+    "keras.src.legacy",
+    "keras.src.legacy.saved_model",
+    "keras.src.legacy.preprocessing",
+    "keras.src.legacy.preprocessing.image",
+]:
+    if mod_name not in sys.modules:
+        sys.modules[mod_name] = KerasLegacyPolyfill(mod_name)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,6 +36,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"]   = "3"        # Suppress TF noise
 os.environ["PYTORCH_NO_CUDA_MEMORY_CACHING"] = "1"
 
 os.makedirs("/tmp/.cache_hf", exist_ok=True)
+
 
 # ── ZeroGPU support for HuggingFace Spaces ────────────────────────────────────
 try:
