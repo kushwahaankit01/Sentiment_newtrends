@@ -80,6 +80,12 @@ sys.modules["keras.src.legacy.preprocessing.sequence"] = _seq
 sys.modules["keras.src.legacy.models"] = _models
 sys.modules["keras.src.legacy.layers"] = _layers
 
+try:
+    import tf_keras.src.engine.functional as _func_mod
+    sys.modules["tf_keras.src.models.functional"] = _func_mod
+    sys.modules["keras.src.models.functional"] = _func_mod
+except Exception as e:
+    pass
 
 import tensorflow as tf
 
@@ -97,8 +103,28 @@ except Exception:
     register_keras = tf.keras.utils.register_keras_serializable
 
 @register_keras()
-class HF_Bert_Layer(Layer):
+class GetItem(Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
+    def call(self, inputs, *args, **kwargs):
+        if isinstance(inputs, (list, tuple)):
+            x = inputs[0]
+        else:
+            x = inputs
+        return x[:, 0, :]
+
+    def get_config(self):
+        return super().get_config()
+
+import types
+ops_numpy_mod = types.ModuleType("keras.src.ops.numpy")
+ops_numpy_mod.GetItem = GetItem
+sys.modules["keras.src.ops.numpy"] = ops_numpy_mod
+sys.modules["tf_keras.src.ops.numpy"] = ops_numpy_mod
+
+@register_keras()
+class HF_Bert_Layer(Layer):
 
     def __init__(self, model_name="bert-base-uncased", trainable_layers=4, **kwargs):
         super().__init__(**kwargs)
@@ -167,8 +193,9 @@ async def lifespan(app: FastAPI):
             
         models["bert_tokenizer"] = BertTokenizer.from_pretrained(BERT_TOKENIZER_DIR)
         
-        custom_objects = {"HF_Bert_Layer": HF_Bert_Layer}
+        custom_objects = {"HF_Bert_Layer": HF_Bert_Layer, "GetItem": GetItem}
         models["text_model"] = load_model(TEXT_MODEL_PATH, custom_objects=custom_objects, compile=False)
+
         models["lemmatizer"] = WordNetLemmatizer()
         models["stop_words"] = set(stopwords.words('english'))
         print("BERT Text Model loaded successfully!")

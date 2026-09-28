@@ -25,6 +25,14 @@ sys.modules["keras.src.legacy.preprocessing.sequence"] = _seq
 sys.modules["keras.src.legacy.models"] = _models
 sys.modules["keras.src.legacy.layers"] = _layers
 
+try:
+    import tf_keras.src.engine.functional as _func_mod
+    sys.modules["tf_keras.src.models.functional"] = _func_mod
+    sys.modules["keras.src.models.functional"] = _func_mod
+except Exception as e:
+    pass
+
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
