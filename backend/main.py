@@ -91,16 +91,30 @@ import tensorflow as tf
 
 try:
     import tf_keras as keras
-    from tf_keras.layers import Layer
+    from tf_keras.layers import Layer, InputLayer as _OriginalInputLayer
     from tf_keras.models import load_model
     from tf_keras.preprocessing.sequence import pad_sequences
     register_keras = keras.utils.register_keras_serializable
 except Exception:
     keras = tf.keras
-    from tensorflow.keras.layers import Layer
+    from tensorflow.keras.layers import Layer, InputLayer as _OriginalInputLayer
     from tensorflow.keras.models import load_model
     from tensorflow.keras.preprocessing.sequence import pad_sequences
     register_keras = tf.keras.utils.register_keras_serializable
+
+# ── Patch InputLayer.from_config for Keras 3 -> Keras 2 compatibility ────────
+try:
+    _orig_input_from_config = _OriginalInputLayer.from_config
+    @classmethod
+    def _patched_input_from_config(cls, config):
+        cfg = config.copy()
+        if "batch_shape" in cfg:
+            cfg["batch_input_shape"] = cfg.pop("batch_shape")
+        return _orig_input_from_config(cfg)
+    _OriginalInputLayer.from_config = _patched_input_from_config
+except Exception as e:
+    pass
+
 
 @register_keras()
 class GetItem(Layer):
