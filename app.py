@@ -23,9 +23,11 @@ try:
     @spaces.GPU
     def zero_gpu_init():
         return True
-    print("✅ ZeroGPU function registered successfully.", flush=True)
+    zero_gpu_init()
+    print("✅ ZeroGPU function registered and executed successfully.", flush=True)
 except Exception as e:
     print(f"ℹ️ Spaces info: {e}", flush=True)
+
 
 # ── Diagnostic: verify model files are real binaries, not LFS pointers ───────
 def check_file(label, path):
